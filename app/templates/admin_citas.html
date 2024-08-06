@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Citas</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-image: url("{{ url_for('static', filename='img/img1.jpg') }}");
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+            color: #000;
+            overflow-x: hidden;
+            margin: 0;
+        }
+
+        .contenedorForm {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+            max-width: 500px;
+            margin: 20px auto;
+        }
+
+        .title-container {
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #000;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px auto;
+            width: 50%;
+            max-width: 600px;
+            font-family: 'Arial', sans-serif;
+            font-size: 2rem;
+            border: 2px solid #000;
+        }
+
+        .form-control, .form-label, .btn-primary, .btn-danger {
+            margin: 0.5rem 0;
+        }
+
+        .confirmation-message, .edit-confirmation-message {
+            display: none;
+            color: green;
+            font-weight: bold;
+        }
+
+        .error-message {
+            display: none;
+            color: red;
+            font-weight: bold;
+        }
+
+        .table-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+            margin-top: 20px;
+        }
+        
+        .nav-link {
+            color: darkgreen !important; /* Color del texto del enlace en blanco */
+            font-size: 1.3rem;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg fixed-top">
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('vistaadmin') }}">Panel Administrador</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('login') }}" onclick="return confirmLogout();">Cerrar sesión</a>
+            </li>
+            
+            <script>
+            function confirmLogout() {
+                return confirm("¿Estás seguro de que deseas cerrar sesión?");
+            }
+            </script>
+            
+        </ul>
+    </div>
+</nav>
+
+<div class="title-container">
+    <h3 class="mt-1 text-center">Gestión de Citas</h3>
+</div>
+
+<div class="container table-container">
+    <h2>Lista de Citas</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Motivo</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="citaList">
+            {% for cita in citas %}
+            <tr data-id="{{ cita.id }}">
+                <td>{{ cita.fecha_consulta }}</td>
+                <td>{{ cita.hora_consulta }}</td>
+                <td>{{ cita.motivo }}</td>
+                <td>
+                    <button class="btn btn-info btn-sm edit-cita" data-id="{{ cita.id }}" data-fecha="{{ cita.fecha_consulta }}" data-hora="{{ cita.hora_consulta }}" data-motivo="{{ cita.motivo }}">Editar</button>
+                    <button class="btn btn-danger btn-sm delete-cita" data-id="{{ cita.id }}">Eliminar</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal para editar cita -->
+<div class="modal fade" id="editCitaModal" tabindex="-1" aria-labelledby="editCitaLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editCitaLabel">Editar Cita</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editCitaId">
+                <div class="form-group">
+                    <label for="editFecha">Fecha de la Cita:</label>
+                    <input type="date" class="form-control" id="editFecha" required>
+                </div>
+                <div class="form-group">
+                    <label for="editHora">Hora de la Cita:</label>
+                    <input type="time" class="form-control" id="editHora" required>
+                </div>
+                <div class="form-group">
+                    <label for="editMotivo">Motivo:</label>
+                    <textarea class="form-control" id="editMotivo" rows="3" required></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="saveChangesButton">Guardar cambios</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    // Manejo de eliminación de citas
+    document.getElementById("citaList").addEventListener("click", function(event) {
+        if (event.target.classList.contains("delete-cita")) {
+            var citaId = event.target.getAttribute("data-id");
+            var confirmacion = confirm("¿Estás seguro de que deseas eliminar esta cita?");
+            if (!confirmacion) return;
+
+            fetch(`/citas/delete/${citaId}`, {
+                method: "POST"
+            }).then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Eliminar la fila de la tabla
+                    var row = document.querySelector('tr[data-id="' + citaId + '"]');
+                    row.parentNode.removeChild(row);
+                } else {
+                    alert("Error al eliminar la cita.");
+                }
+            }).catch(error => {
+                console.error("Error:", error);
+                alert("Error al eliminar la cita.");
+            });
+        } else if (event.target.classList.contains("edit-cita")) {
+            var citaId = event.target.getAttribute("data-id");
+            var fecha = event.target.getAttribute("data-fecha");
+            var hora = event.target.getAttribute("data-hora");
+            var motivo = event.target.getAttribute("data-motivo");
+
+            // Llenar el modal con la información de la cita
+            document.getElementById("editCitaId").value = citaId;
+            document.getElementById("editFecha").value = fecha;
+            document.getElementById("editHora").value = hora;
+            document.getElementById("editMotivo").value = motivo;
+
+            // Mostrar el modal
+            $('#editCitaModal').modal('show');
+        }
+    });
+
+    // Guardar cambios al editar cita
+    document.getElementById("saveChangesButton").addEventListener("click", function() {
+        var confirmacion = confirm("¿Estás seguro de que deseas guardar los cambios?");
+        if (!confirmacion) return;
+
+        var citaId = document.getElementById("editCitaId").value;
+        var fecha = document.getElementById("editFecha").value;
+        var hora = document.getElementById("editHora").value;
+        var motivo = document.getElementById("editMotivo").value;
+
+        fetch(`/citas/edit/${citaId}`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                fecha_consulta: fecha,
+                hora_consulta: hora,
+                motivo: motivo
+            })
+        }).then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Actualizar la fila de la tabla con los nuevos datos
+                var row = document.querySelector('tr[data-id="' + citaId + '"]');
+                row.children[0].innerText = fecha;
+                row.children[1].innerText = hora;
+                row.children[2].innerText = motivo;
+
+                // Ocultar el modal
+                $('#editCitaModal').modal('hide');
+            } else {
+                alert("Error al editar la cita.");
+            }
+        }).catch(error => {
+            console.error("Error:", error);
+            alert("Error al editar la cita.");
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/estilo_apartados.css">
+    <style>
+        body {
+            background-image: url("{{ url_for('static', filename='img/fondoa.jpg') }}");
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+            color: white;
+            overflow-x: hidden;
+            margin: 0;
+        }
+
+        .navbar-brand {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.5em;
+        }
+
+        .content-section {
+            padding: 30px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            color: white;
+        }
+
+        .btn-custom {
+            width: 100%;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid white;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .btn-custom:hover {
+            transform: scale(1.05);
+            background-color: rgba(255, 255, 255, 0.3);
+            color: black;
+        }
+
+        .bg-light-green {
+            background-color: rgba(0, 128, 0, 0.5);
+            color: white;
+        }
+
+        .content-grid {
+            max-width: 800px; /* Ancho máximo del contenedor */
+            margin: 40px auto; /* Centrar el contenedor y agregar margen superior */
+        }
+
+        .header-container {
+            max-width: 800px; /* Ancho máximo para el título */
+            margin: 20px auto; /* Centrar y agregar margen superior/inferior */
+            text-align: center;
+        }
+
+        .footer {
+            background-color: rgba(51, 51, 51, 0.8);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .nav-link {
+            color: greenyellow !important; /* Color del texto del enlace en blanco */
+            font-size: 1.3rem;
+        }
+
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg fixed-top">
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('login') }}" onclick="return confirmLogout();">Cerrar sesión</a>
+                </li>
+                
+                <script>
+                function confirmLogout() {
+                    return confirm("¿Estás seguro de que deseas cerrar sesión?");
+                }
+                </script>
+                
+            </ul>
+        </div>
+    </nav>
+    <div class="header-container">
+        <section id="admin-panel" class="content-section bg-light-black">
+            <h2 class="section-title">Panel de Administración</h2>
+            <p>Gestiona los diferentes elementos de la plataforma.</p>
+        </section>
+    </div>
+
+    <div class="content-grid container">
+        <div class="row">
+            <div class="col-lg-6">
+                <button id="btn-usuarios" class="btn-custom content-section">
+                    <h2 class="section-title">Usuarios</h2>
+                    <p>Administra los usuarios registrados en la plataforma.</p>
+                </button>
+            </div>
+            <div class="col-lg-6">
+                <button id="btn-plantas" class="btn-custom content-section">
+                    <h2 class="section-title">Plantas</h2>
+                    <p>Administra la información sobre plantas.</p>
+                </button>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-lg-6">
+                <button id="btn-herramientas" class="btn-custom content-section">
+                    <h2 class="section-title">Herramientas</h2>
+                    <p>Gestiona las herramientas disponibles en la plataforma.</p>
+                </button>
+            </div>
+            <div class="col-lg-6">
+                <button id="btn-articulos" class="btn-custom content-section">
+                    <h2 class="section-title">Artículos</h2>
+                    <p>Administra los artículos publicados.</p>
+                </button>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-lg-6">
+                <button id="btn-huertos" class="btn-custom content-section">
+                    <h2 class="section-title">Huertos</h2>
+                    <p>Gestiona la información sobre huertos.</p>
+                </button>
+            </div>
+            <div class="col-lg-6">
+                <button id="btn-foro" class="btn-custom content-section">
+                    <h2 class="section-title">Foro</h2>
+                    <p>Gestiona las publicaciones y temas del foro.</p>
+                </button>
+            </div>
+        </div>
+
+        <!-- Nuevo botón para Citas -->
+        <div class="row mt-4">
+            <div class="col-lg-12">
+                <button id="btn-citas" class="btn-custom content-section">
+                    <h2 class="section-title">Citas</h2>
+                    <p>Administra las citas programadas en la plataforma.</p>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("btn-usuarios").addEventListener("click", function() {
+            window.location.href = "{{ url_for('admin_usuario') }}";
+        });
+
+        document.getElementById("btn-plantas").addEventListener("click", function() {
+            window.location.href = "{{ url_for('admin_plantas') }}";
+        });
+
+        document.getElementById("btn-herramientas").addEventListener("click", function() {
+            window.location.href = "{{ url_for('admin_herramientas') }}";
+        });
+
+        document.getElementById("btn-articulos").addEventListener("click", function() {
+            window.location.href = "{{ url_for('admin_articulos') }}";
+        });
+
+        document.getElementById("btn-huertos").addEventListener("click", function() {
+            window.location.href = "{{ url_for('admin_huertos') }}";
+        });
+
+        document.getElementById("btn-foro").addEventListener("click", function() {
+            window.location.href = "{{ url_for('admin_foro') }}";
+        });
+
+        // Redirección para citas
+        document.getElementById("btn-citas").addEventListener("click", function() {
+            window.location.href = "{{ url_for('admin_citas') }}";
+        });
+    });
+    </script>
+</body>
+</html>

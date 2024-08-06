@@ -1,0 +1,21 @@
+services:
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: 'root'
+      MYSQL_DATABASE: 'proyecto'
+    volumes:
+      - ./proyecto.sql:/docker-entrypoint-initdb.d/proyecto.sql
+    ports:
+      - "3307:3306"  # Cambiado de 3006 a 3306
+
+  pythonapp:
+    build: ./app
+    depends_on:
+      - mysql
+    ports:
+      - "4000:5000"
+    volumes:
+      - ./app:/app
+    environment:
+      FLASK_ENV: development

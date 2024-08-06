@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Información de Huertos</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/estilo_apartados.css">
+    <style>
+        .plant-card .card {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            border: 2px solid black;
+        }
+
+        .plant-card .card-img-top {
+            height: 350px;
+            object-fit: cover;
+        }
+
+        .plant-card .card-body {
+            flex-grow: 1;
+        }
+
+        .plant-card .card-title {
+            font-size: 1.25em;
+            margin-bottom: 10px;
+        }
+
+        .plant-card .card-text {
+            font-size: 0.9em;
+        }
+
+        .navbar {
+            padding: 0.5rem 1rem;
+            background-color: #28a745;
+            border-bottom: 3px solid #155724;
+        }
+        .navbar-brand img {
+            max-width: 80px;
+            border-radius: 50%;
+            background-color: white;
+            border: 2px solid black;
+            padding: 5px;
+        }
+        .navbar-nav .nav-item .nav-link {
+            color: white;
+            font-size: 1rem;
+            padding: 0.5rem 1rem;
+        }
+        .navbar-nav .nav-item .nav-link:hover {
+            color: #155724;
+            text-decoration: underline;
+        }
+
+        .footer {
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .content-section {
+            padding: 30px;
+        }
+        .content-grid {
+            margin-top: 70px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Panel de Navegación -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success py-3 fixed-top">
+        <a class="navbar-brand" href="{{ url_for('inicio2') }}">
+            <img src="{{ url_for('static', filename='img/logo2.png') }}" alt="TOCI-METER" class="img-fluid">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('plantas2') }}">Plantas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('huertos3') }}">Huertos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('herramientas2') }}">Herramientas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('articulos2') }}">Artículos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('login') }}">Iniciar Sesión</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('register') }}">Registrarse</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="welcome-section text-center bg-white text-dark py-5" style="margin-top: 60px;">
+        <br><br>    
+        <div style="background-color: #dbdbdb; padding: 20px; border-radius: 10px; border-top: 2px solid black; border-bottom: 2px solid black;">
+            <h1 class="header-title">Huertos</h1>
+            <p class="lead">Explora la información sobre nuestros huertos</p>
+        </div>
+    </div>
+
+    <main class="container my-4">
+        <div class="row">
+            <div class="col-md-4 plant-card">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='img/hortalizas.jpeg') }}" class="card-img-top" alt="Huerto de Hortalizas">
+                    <div class="card-body">
+                        <h5 class="card-title">Huerto de Hortalizas</h5>
+                        <p class="card-text">Este huerto se especializa en la producción de hortalizas frescas como tomates, zanahorias y lechugas.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 plant-card">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='img/frutas.jpg') }}" class="card-img-top" alt="Huerto de Frutas">
+                    <div class="card-body">
+                        <h5 class="card-title">Huerto de Frutas</h5>
+                        <p class="card-text">Cultiva una variedad de árboles frutales, incluyendo manzanos, perales y naranjos.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 plant-card">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='img/especias.jpg') }}" class="card-img-top" alt="Huerto de Especias">
+                    <div class="card-body">
+                        <h5 class="card-title">Huerto de Especias</h5>
+                        <p class="card-text">Dedicado a la producción de hierbas y especias como albahaca, tomillo y romero.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 plant-card">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='img/comestible.jpg') }}" class="card-img-top" alt="Huerto de Flores Comestibles">
+                    <div class="card-body">
+                        <h5 class="card-title">Huerto de Flores Comestibles</h5>
+                        <p class="card-text">Cultiva flores comestibles como capuchinas, violetas y pensamientos, utilizadas en la cocina gourmet.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 plant-card">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='img/urbano.jpg') }}" class="card-img-top" alt="Huerto Urbano">
+                    <div class="card-body">
+                        <h5 class="card-title">Huerto Urbano</h5>
+                        <p class="card-text">Huerto diseñado para ser cultivado en espacios reducidos como balcones y terrazas urbanas.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 plant-card">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='img/raices.jpg') }}" class="card-img-top" alt="Huerto de Raíces">
+                    <div class="card-body">
+                        <h5 class="card-title">Huerto de Raíces</h5>
+                        <p class="card-text">Enfocado en el cultivo de tubérculos como papas, remolachas y nabos.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 plant-card">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='img/calabazas.jpeg') }}" class="card-img-top" alt="Huerto de Calabazas">
+                    <div class="card-body">
+                        <h5 class="card-title">Huerto de Calabazas</h5>
+                        <p class="card-text">Especializado en el cultivo de diversas variedades de calabazas y zapallos.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 plant-card">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='img/legumbres.jpg') }}" class="card-img-top" alt="Huerto de Legumbres">
+                    <div class="card-body">
+                        <h5 class="card-title">Huerto de Legumbres</h5>
+                        <p class="card-text">Producción de legumbres como frijoles, lentejas y garbanzos, esenciales en la alimentación.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 plant-card">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='img/medicinal.jpeg') }}" class="card-img-top" alt="Huerto de Hierbas Medicinales">
+                    <div class="card-body">
+                        <h5 class="card-title">Huerto de Hierbas Medicinales</h5>
+                        <p class="card-text">Cultiva hierbas medicinales como la manzanilla, el ginseng y la valeriana, utilizadas en remedios naturales.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 plant-card">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='img/bayas.jpg') }}" class="card-img-top" alt="Huerto de Bayas">
+                    <div class="card-body">
+                        <h5 class="card-title">Huerto de Bayas</h5>
+                        <p class="card-text">Especializado en el cultivo de bayas como fresas, frambuesas y moras.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 plant-card">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='img/acuaponia.jpg') }}" class="card-img-top" alt="Huerto Acuapónico">
+                    <div class="card-body">
+                        <h5 class="card-title">Huerto Acuapónico</h5>
+                        <p class="card-text">Combina el cultivo de plantas y la cría de peces en un sistema cerrado de recirculación de agua.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 plant-card">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='img/champiñones.jpeg') }}" class="card-img-top" alt="Huerto de Champiñones">
+                    <div class="card-body">
+                        <h5 class="card-title">Huerto de Champiñones</h5>
+                        <p class="card-text">Especializado en la producción de hongos comestibles como champiñones y setas shiitake.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer mt-5">
+        <p>&copy; 2024 Comunidad de Jardinería. Todos los derechos reservados.</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('vistaadmin') }}">Panel Administrador</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('login') }}" onclick="return confirmLogout();">Cerrar sesión</a>
+                </li>
+                
+                <script>
+                function confirmLogout() {
+                    return confirm("¿Estás seguro de que deseas cerrar sesión?");
+                }
+                </script>
+                
+            </ul>
+        </div>
+    </nav>
+    <title>Registro de Artículos</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-image: url("{{ url_for('static', filename='img/img1.jpg') }}");
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+            color: #000;
+            overflow-x: hidden;
+            margin: 0;
+        }
+
+        .contenedorForm {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+            max-width: 500px;
+            margin: 20px auto;
+        }
+
+        .title-container {
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #000;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px auto;
+            width: 50%;
+            max-width: 600px;
+            font-family: 'Arial', sans-serif;
+            font-size: 2rem;
+            border: 2px solid #000;
+        }
+
+        .form-control, .form-label, .btn-primary, .btn-danger {
+            margin: 0.5rem 0;
+        }
+
+        .confirmation-message, .edit-confirmation-message {
+            display: none;
+            color: green;
+            font-weight: bold;
+        }
+
+        .error-message {
+            display: none;
+            color: red;
+            font-weight: bold;
+        }
+
+        .table-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+            margin-top: 20px;
+        }
+        .nav-link {
+            color: darkgreen !important; /* Color del texto del enlace en blanco */
+            font-size: 1.3rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="title-container">
+        <h3 class="mt-1 text-center">Registro de Artículos</h3>
+    </div>
+
+    <div class="container contenedorForm">
+        <form id="articuloForm" action="{{ url_for('gestionar_articulos') }}" method="POST">
+            <div class="mb-3">
+                <label for="nombre" class="form-label">Nombre del Artículo:</label>
+                <input type="text" class="form-control" id="nombre" name="nombre" required>
+            </div>
+            <div class="mb-3">
+                <label for="descripcion" class="form-label">Descripción:</label>
+                <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="precio" class="form-label">Precio:</label>
+                <input type="number" class="form-control" id="precio" name="precio" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Añadir Artículo</button>
+        </form>
+        
+        <div class="confirmation-message mt-3">Artículo añadido correctamente.</div>
+        <div class="error-message mt-3">Hubo un error al realizar la operación.</div>
+    </div>
+
+    <div class="container table-container">
+        <h2>Lista de Artículos</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Precio</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="articuloList">
+                {% for articulo in articulos %}
+                <tr data-id="{{ articulo.id }}">
+                    <td>{{ articulo.nombre }}</td>
+                    <td>{{ articulo.descripcion }}</td>
+                    <td>{{ articulo.precio }}</td>
+                    <td>
+                        <button class="btn btn-info btn-sm edit-articulo" data-id="{{ articulo.id }}" data-nombre="{{ articulo.nombre }}" data-descripcion="{{ articulo.descripcion }}" data-precio="{{ articulo.precio }}">Editar</button>
+                        <button class="btn btn-danger btn-sm delete-articulo" data-id="{{ articulo.id }}">Eliminar</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal para editar artículo -->
+    <div class="modal fade" id="editArticuloModal" tabindex="-1" aria-labelledby="editArticuloLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editArticuloLabel">Editar Artículo</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="editArticuloId">
+                    <div class="form-group">
+                        <label for="editNombre">Nombre del Artículo:</label>
+                        <input type="text" class="form-control" id="editNombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editDescripcion">Descripción:</label>
+                        <textarea class="form-control" id="editDescripcion" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="editPrecio">Precio:</label>
+                        <input type="number" class="form-control" id="editPrecio" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="saveChangesButton">Guardar cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.getElementById("articuloForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Evitar el envío por defecto
+
+            var formData = new FormData(this);
+            var confirmacion = confirm("¿Estás seguro de que deseas añadir este artículo?");
+            if (!confirmacion) return;
+
+            fetch("{{ url_for('gestionar_articulos') }}", {
+                method: "POST",
+                body: formData
+            }).then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Actualizar la lista de artículos
+                    var articuloList = document.getElementById("articuloList");
+                    var newRow = articuloList.insertRow();
+                    newRow.setAttribute('data-id', data.articulo.id);
+                    newRow.innerHTML = `<td>${data.articulo.nombre}</td><td>${data.articulo.descripcion}</td><td>${data.articulo.precio}</td>
+                                        <td>
+                                            <button class="btn btn-info btn-sm edit-articulo" data-id="${data.articulo.id}" data-nombre="${data.articulo.nombre}" data-descripcion="${data.articulo.descripcion}" data-precio="${data.articulo.precio}">Editar</button>
+                                            <button class="btn btn-danger btn-sm delete-articulo" data-id="${data.articulo.id}">Eliminar</button>
+                                        </td>`;
+                    // Mostrar mensaje de confirmación
+                    document.querySelector('.confirmation-message').style.display = 'block';
+                    document.querySelector('.error-message').style.display = 'none';
+                    document.getElementById("articuloForm").reset();
+
+                    setTimeout(() => {
+                        document.querySelector('.confirmation-message').style.display = 'none';
+                    }, 3000);
+                } else {
+                    document.querySelector('.confirmation-message').style.display = 'none';
+                    document.querySelector('.error-message').style.display = 'block';
+                }
+            }).catch(error => {
+                document.querySelector('.confirmation-message').style.display = 'none';
+                document.querySelector('.error-message').style.display = 'block';
+                console.error("Error:", error);
+            });
+        });
+
+        document.getElementById("articuloList").addEventListener("click", function(event) {
+            if (event.target.classList.contains("delete-articulo")) {
+                var articuloId = event.target.getAttribute("data-id");
+                var confirmacion = confirm("¿Estás seguro de que deseas eliminar este artículo?");
+                if (!confirmacion) return;
+
+                fetch(`/articulos/delete/${articuloId}`, {
+                    method: "POST"
+                }).then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Eliminar la fila de la tabla
+                        var row = document.querySelector(`tr[data-id="${articuloId}"]`);
+                        row.parentNode.removeChild(row);
+                    } else {
+                        alert("Error al eliminar el artículo.");
+                    }
+                }).catch(error => {
+                    console.error("Error:", error);
+                    alert("Error al eliminar el artículo.");
+                });
+            } else if (event.target.classList.contains("edit-articulo")) {
+                var articuloId = event.target.getAttribute("data-id");
+                var nombre = event.target.getAttribute("data-nombre");
+                var descripcion = event.target.getAttribute("data-descripcion");
+                var precio = event.target.getAttribute("data-precio");
+
+                // Llenar el modal con la información del artículo
+                document.getElementById("editArticuloId").value = articuloId;
+                document.getElementById("editNombre").value = nombre;
+                document.getElementById("editDescripcion").value = descripcion;
+                document.getElementById("editPrecio").value = precio;
+
+                // Mostrar el modal
+                $('#editArticuloModal').modal('show');
+            }
+        });
+
+        // Guardar cambios al editar artículo
+        document.getElementById("saveChangesButton").addEventListener("click", function() {
+            var confirmacion = confirm("¿Estás seguro de que deseas guardar los cambios?");
+            if (!confirmacion) return;
+
+            var articuloId = document.getElementById("editArticuloId").value;
+            var nombre = document.getElementById("editNombre").value;
+            var descripcion = document.getElementById("editDescripcion").value;
+            var precio = document.getElementById("editPrecio").value;
+
+            fetch(`/articulos/edit/${articuloId}`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    nombre: nombre,
+                    descripcion: descripcion,
+                    precio: precio
+                })
+            }).then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Actualizar la fila de la tabla con los nuevos datos
+                    var row = document.querySelector(`tr[data-id="${articuloId}"]`);
+                    row.children[0].innerText = nombre;
+                    row.children[1].innerText = descripcion;
+                    row.children[2].innerText = precio;
+
+                    // Mostrar mensaje de confirmación
+                    document.querySelector('.edit-confirmation-message').style.display = 'block';
+                    setTimeout(() => {
+                        document.querySelector('.edit-confirmation-message').style.display = 'none';
+                    }, 3000);
+
+                    // Ocultar el modal
+                    $('#editArticuloModal').modal('hide');
+                } else {
+                    alert("Artículo editado correctamente.");
+                }
+            }).catch(error => {
+                console.error("Error:", error);
+                alert("Artículo editado correctamente.");
+            });
+        });
+    </script>
+</body>
+</html>

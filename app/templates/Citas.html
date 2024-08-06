@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .navbar {
+            padding: 0.5rem 1rem;
+            background-color: #28a745;
+            border-bottom: 3px solid #155724;
+        }
+        .navbar-brand img {
+            max-width: 80px;
+            border-radius: 50%;
+            background-color: white;
+            border: 2px solid black;
+            padding: 5px;
+        }
+        .navbar-nav .nav-item .nav-link {
+            color: white;
+            font-size: 1rem;
+            padding: 0.5rem 1rem;
+        }
+        .navbar-nav .nav-item .nav-link:hover {
+            color: #155724;
+            text-decoration: underline;
+        }
+        .content {
+            flex: 1;
+        }
+        .form-container {
+            background-color: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #155724;
+        }
+        .form-container .form-group label {
+            font-weight: bold;
+            color: #155724;
+        }
+        .footer {
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .alert {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success py-3 fixed-top">
+        <a class="navbar-brand" href="{{ url_for('inicio') }}">
+            <img src="{{ url_for('static', filename='img/logo2.png') }}" alt="TOCI-METER" class="img-fluid">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('plantas') }}">Plantas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('huertos2') }}">Huertos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('herramientas') }}">Herramientas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('articulos') }}">Artículos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('foro') }}">Foro</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('login') }}" onclick="return confirmLogout();">Cerrar sesión</a>
+                </li>
+                
+                <script>
+                function confirmLogout() {
+                    return confirm("¿Estás seguro de que deseas cerrar sesión?");
+                }
+                </script>
+                
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Contenido principal -->
+    <div class="content container mt-5 pt-5">
+        <br><br><br>
+
+        <!-- Mensajes flash de confirmación o error -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="mt-4">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Sección de generación de citas -->
+        <div class="form-container">
+            <h2>Generar Cita con Experto</h2>
+            <form id="checklistForm" action="{{ url_for('crear_cita') }}" method="post">
+                <div class="form-group">
+                    <label for="fechaConsulta">Fecha de la consulta</label>
+                    <input type="date" class="form-control" id="fechaConsulta" name="fecha_consulta" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="horaConsulta">Hora de la consulta</label>
+                    <input type="time" class="form-control" id="horaConsulta" name="hora_consulta" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="motivoConsulta">Motivo de la consulta</label>
+                    <textarea class="form-control" id="motivoConsulta" name="motivo" rows="3" required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-success w-100 mt-3">Generar Cita</button>
+            </form>
+            <button class="btn btn-primary w-100 mt-3" onclick='location.href="{{ url_for("ver_citas") }}"'>Ver Citas</button>
+
+        </div>
+    </div>
+    
+    <footer class="footer mt-5">
+        <p>&copy; 2024 Comunidad de Jardinería. Todos los derechos reservados.</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

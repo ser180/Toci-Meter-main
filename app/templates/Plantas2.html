@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Información de Plantas</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/estilo_apartados.css">
+    <style>
+        .plant-card .card {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            border: 2px solid black; /* Añade esta línea */
+        }
+
+        .navbar {
+            padding: 0.5rem 1rem; /* Reducción del padding de la barra */
+            background-color: #28a745; /* Color de fondo de la barra */
+            border-bottom: 3px solid #155724; /* Borde inferior */
+        }
+        .navbar-brand img {
+            max-width: 80px; /* Tamaño del logo */
+            border-radius: 50%; /* Redondear logo */
+            background-color: white; /* Fondo blanco del logo */
+            border: 2px solid black; /* Borde negro alrededor del logo */
+            padding: 5px; /* Espaciado interior alrededor del logo */
+        }
+        .navbar-nav .nav-item .nav-link {
+            color: white; /* Color de texto */
+            font-size: 1rem; /* Tamaño de fuente ajustado */
+            padding: 0.5rem 1rem; /* Padding ajustado */
+        }
+        .navbar-nav .nav-item .nav-link:hover {
+            color: #155724; /* Color de texto al pasar el mouse */
+            text-decoration: underline; /* Subrayado al pasar el mouse */
+        }
+
+        .plant-card .card-img-top {
+            height: 350px; /* Altura fija para las imágenes */
+            object-fit: cover; /* Ajusta la imagen al contenedor */
+        }
+
+        .plant-card .card-body {
+            flex-grow: 1; /* Permite que el cuerpo de la tarjeta crezca para ocupar el espacio */
+        }
+
+        .plant-card .card-title {
+            font-size: 1.25em;
+            margin-bottom: 10px;
+        }
+
+        .plant-card .card-text {
+            font-size: 0.9em;
+        }
+
+        .footer {
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .content-section {
+            padding: 30px;
+        }
+        .content-grid {
+            margin-top: 70px; /* Ajuste de margen superior para compensar la barra fija */
+        }
+    </style>
+</head>
+<body>
+    <!-- Panel de Navegación -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success py-3 fixed-top">
+        <a class="navbar-brand" href="{{ url_for('inicio2') }}">
+            <img src="{{ url_for('static', filename='img/logo2.png') }}" alt="TOCI-METER" class="img-fluid">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('plantas2') }}">Plantas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('huertos3') }}">Huertos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('herramientas2') }}">Herramientas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('articulos2') }}">Artículos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('login') }}">Iniciar Sesión</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('register') }}">Registrarse</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="welcome-section text-center bg-white text-dark py-5" style="margin-top: 60px;">
+        <br><br>    
+        <div style="background-color: #dbdbdb; padding: 20px; border-radius: 10px; border-top: 2px solid black; border-bottom: 2px solid black;">
+            <h1 class="header-title">Plantas</h1>
+            <p class="lead">Explora la información de nuestras plantas</p>
+        </div>
+    </div>
+    
+    
+
+    <main class="container my-4">
+        <div class="row">
+            <div class="col-md-4 plant-card">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='img/rosa.jpeg') }}" class="card-img-top" alt="Rosa">
+                    <div class="card-body">
+                        <h5 class="card-title">Rosa</h5>
+                        <p class="card-text">La rosa es una planta del género Rosa, de la familia de las rosáceas. Se cultiva por sus flores, apreciadas en todo el mundo.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 plant-card">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='img/cactus.jpg') }}" class="card-img-top" alt="Cactus">
+                    <div class="card-body">
+                        <h5 class="card-title">Cactus</h5>
+                        <p class="card-text">El cactus es una planta de la familia Cactaceae. Son plantas adaptadas a vivir en ambientes áridos.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 plant-card">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='img/bambu.jpg') }}" class="card-img-top" alt="Bambú">
+                    <div class="card-body">
+                        <h5 class="card-title">Bambú</h5>
+                        <p class="card-text">El bambú es una subfamilia de plantas de la familia de las poáceas. Es conocido por su rápido crecimiento y resistencia.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 plant-card">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='img/lavanda.jpg') }}" class="card-img-top" alt="Lavanda">
+                    <div class="card-body">
+                        <h5 class="card-title">Lavanda</h5>
+                        <p class="card-text">La lavanda es una planta del género Lavandula. Se utiliza en aromaterapia y productos de cuidado personal por su aroma relajante.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 plant-card">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='img/Aloe.jpg') }}" class="card-img-top" alt="Aloe Vera">
+                    <div class="card-body">
+                        <h5 class="card-title">Aloe Vera</h5>
+                        <p class="card-text">Es una planta suculenta conocida por sus propiedades medicinales y su uso en la piel.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 plant-card">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='img/orquidea.jpg') }}" class="card-img-top" alt="Orquídea">
+                    <div class="card-body">
+                        <h5 class="card-title">Orquídea</h5>
+                        <p class="card-text">La orquídea es una planta de la familia Orchidaceae. Son apreciadas por sus flores exóticas y variadas.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 plant-card">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='img/helecho.jpg') }}" class="card-img-top" alt="Helecho">
+                    <div class="card-body">
+                        <h5 class="card-title">Helecho</h5>
+                        <p class="card-text">El helecho es una planta sin flores que se reproduce por esporas. Se encuentra comúnmente en lugares húmedos y sombreados.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 plant-card">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='img/girasol.jpg') }}" class="card-img-top" alt="Girasol">
+                    <div class="card-body">
+                        <h5 class="card-title">Girasol</h5>
+                        <p class="card-text">El girasol es una planta del género Helianthus. Es conocido por su gran flor amarilla que sigue al sol.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 plant-card">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='img/manzanilla.jpg') }}" class="card-img-top" alt="Manzanilla">
+                    <div class="card-body">
+                        <h5 class="card-title">Manzanilla</h5>
+                        <p class="card-text">La manzanilla es una planta del género Matricaria. Se utiliza comúnmente para hacer té con propiedades calmantes.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 plant-card">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='img/menta.jpeg') }}" class="card-img-top" alt="Menta">
+                    <div class="card-body">
+                        <h5 class="card-title">Menta</h5>
+                        <p class="card-text">La menta es una planta del género Mentha. Es utilizada por su sabor refrescante en alimentos, bebidas y productos de cuidado personal.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 plant-card">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='img/tomillo.jpg') }}" class="card-img-top" alt="Tomillo">
+                    <div class="card-body">
+                        <h5 class="card-title">Tomillo</h5>
+                        <p class="card-text">El tomillo es una planta del género Thymus. Es utilizado como hierba culinaria y por sus propiedades medicinales.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 plant-card">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='img/jazmin.jpg') }}" class="card-img-top" alt="Jazmín">
+                    <div class="card-body">
+                        <h5 class="card-title">Jazmín</h5>
+                        <p class="card-text">El jazmín es una planta del género Jasminum. Sus flores blancas y fragantes son muy apreciadas en perfumería y jardinería.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer mt-5">
+        <p>&copy; 2024 Comunidad de Jardinería. Todos los derechos reservados.</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

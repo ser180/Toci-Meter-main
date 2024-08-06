@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('vistaadmin') }}">Panel Administrador</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('login') }}" onclick="return confirmLogout();">Cerrar sesión</a>
+                </li>
+                
+                <script>
+                function confirmLogout() {
+                    return confirm("¿Estás seguro de que deseas cerrar sesión?");
+                }
+                </script>
+                
+            </ul>
+        </div>
+    </nav>
+    <title>Foro de Administración</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+    <style>
+        .nav-link {
+            color: darkgreen !important; /* Color del texto del enlace en blanco */
+            font-size: 1.3rem;
+        }
+        body {
+            background-image: url("{{ url_for('static', filename='img/img1.jpg') }}");
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+            color: #000;
+            overflow-x: hidden;
+            margin: 0;
+        }
+
+        .contenedorForm {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+            max-width: 500px;
+            margin: 20px auto;
+        }
+
+        .title-container {
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #000;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px auto;
+            width: 50%;
+            max-width: 600px;
+            font-family: 'Arial', sans-serif;
+            font-size: 2rem;
+            border: 2px solid #000;
+        }
+
+        .form-control, .form-label, .btn-primary, .btn-danger {
+            margin: 0.5rem 0;
+        }
+
+        .confirmation-message, .edit-confirmation-message {
+            display: none;
+            color: green;
+            font-weight: bold;
+        }
+
+        .error-message {
+            display: none;
+            color: red;
+            font-weight: bold;
+        }
+
+        .table-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+            margin-top: 20px;
+        }
+
+        .post-card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            background-color: #fff;
+        }
+
+        .post-content {
+            font-size: 1.1em;
+        }
+
+        .post-footer {
+            margin-top: 15px;
+        }
+
+        .reaction-button {
+            background: transparent;
+            border: none;
+            color: #333;
+            cursor: pointer;
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+
+        .reaction-button.active {
+            color: red;
+        }
+
+        .animate-like {
+            animation: bounce 0.3s ease;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="title-container">
+        <h3 class="mt-1 text-center">Foro de Administración</h3>
+    </div>
+
+    <div class="container contenedorForm">
+        <h4>Nueva Publicación</h4>
+        <form id="postForm">
+            <div class="form-group">
+                <textarea class="form-control" name="contenido" id="postText" rows="3" placeholder="Escribe tu publicación aquí..." required></textarea>
+            </div>
+            <button type="button" class="btn btn-primary" id="publishButton">Publicar</button>
+            <div class="confirmation-message mt-3">Publicación exitosa.</div>
+            <div class="error-message mt-3">Hubo un error al realizar la operación.</div>
+        </form>
+    </div>
+
+    <div class="container table-container">
+        <h2>Lista de Publicaciones</h2>
+        <div id="postsContainer">
+            {% for post in publicaciones %}
+            <div class="post-card">
+                <div class="post-content">
+                    <p>{{ post.contenido }}</p>
+                </div>
+                <div class="post-footer">
+                    <span class="text-muted">Publicado el {{ post.fecha_publicacion }}</span>
+                    <div class="reactions float-right">
+                        <button class="reaction-button" onclick="toggleLike(this)"><i class="fas fa-thumbs-up"></i></button>
+                        <button class="reaction-button" onclick="toggleLike(this)"><i class="fas fa-heart"></i></button>
+                        <button class="btn btn-info btn-sm edit-foro" data-id="{{ post.id }}" data-contenido="{{ post.contenido }}">Editar</button>
+                        <button class="btn btn-danger btn-sm delete-foro" data-id="{{ post.id }}">Eliminar</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Modal de confirmación -->
+    <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmModalLabel">Confirmación de Publicación</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    ¿Estás seguro de que deseas publicar esto?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="confirmPublish">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para editar publicación -->
+    <div class="modal fade" id="editForoModal" tabindex="-1" aria-labelledby="editForoLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editForoLabel">Editar Publicación</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="editForoId">
+                    <div class="form-group">
+                        <label for="editContenido">Contenido:</label>
+                        <textarea class="form-control" id="editContenido" rows="3" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="saveForoChangesButton">Guardar cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function toggleLike(button) {
+            button.classList.toggle('active');
+            button.classList.add('animate-like');
+            setTimeout(() => {
+                button.classList.remove('animate-like');
+            }, 300);
+        }
+
+        // Mostrar modal de confirmación antes de publicar
+        document.getElementById('publishButton').addEventListener('click', function() {
+            $('#confirmModal').modal('show');
+        });
+
+        // Manejar la confirmación de publicación
+        document.getElementById('confirmPublish').addEventListener('click', function() {
+            var contenido = document.getElementById('postText').value;
+
+            fetch('/admin/foro', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: 'contenido=' + encodeURIComponent(contenido)
+            }).then(response => {
+                $('#confirmModal').modal('hide'); // Ocultar el modal de confirmación
+                if (response.ok) {
+                    location.reload();  // Recargar la página si la publicación es exitosa
+                } else {
+                    document.querySelector('.error-message').style.display = 'block';
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+                document.querySelector('.error-message').style.display = 'block';
+            });
+        });
+
+        document.getElementById("postsContainer").addEventListener("click", function(event) {
+            if (event.target.classList.contains("delete-foro")) {
+                var foroId = event.target.getAttribute("data-id");
+                var confirmacion = confirm("¿Estás seguro de que deseas eliminar esta publicación?");
+                if (!confirmacion) return;
+
+                fetch(`/admin_foro/delete/${foroId}`, {
+                    method: "POST"
+                }).then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        var postCard = event.target.closest('.post-card');
+                        postCard.parentNode.removeChild(postCard);
+                    } else {
+                        alert("Error al eliminar la publicación.");
+                    }
+                }).catch(error => {
+                    console.error("Error:", error);
+                    alert("Error al eliminar la publicación.");
+                });
+            } else if (event.target.classList.contains("edit-foro")) {
+                var foroId = event.target.getAttribute("data-id");
+                var contenido = event.target.getAttribute("data-contenido");
+
+                // Llenar el modal con la información de la publicación
+                document.getElementById("editForoId").value = foroId;
+                document.getElementById("editContenido").value = contenido;
+
+                // Mostrar el modal
+                $('#editForoModal').modal('show');
+            }
+        });
+
+        document.getElementById("saveForoChangesButton").addEventListener("click", function() {
+            var foroId = document.getElementById("editForoId").value;
+            var contenido = document.getElementById("editContenido").value;
+
+            // Mensaje de confirmación antes de guardar cambios
+            var confirmacion = confirm("¿Estás seguro de que deseas guardar los cambios?");
+            if (!confirmacion) return;
+
+            fetch(`/admin_foro/edit/${foroId}`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    contenido: contenido
+                })
+            }).then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Recargar la página para reflejar los cambios
+                    location.reload();
+                } else {
+                    alert("Error al actualizar la publicación.");
+                }
+            }).catch(error => {
+                console.error("Error:", error);
+                alert("Error al actualizar la publicación.");
+            });
+        });
+    </script>
+</body>
+</html>
